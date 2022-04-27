@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/masim05/eatt/issues"
   },
-  "homepage": "https://github.com/masim05/eatt#readme"
+  "homepage": "https://github.com/masim05/eatt#readme",
+  "devDependencies": {
+    "jest": "^28.0.2"
+  }
 }
