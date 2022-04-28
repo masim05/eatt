@@ -58,4 +58,17 @@ module.exports = class Broker {
             }
         })
     }
+
+    isMarketOpen() {
+        return new Promise((resolve) => {
+            const now = new Date();
+            const nextClosingTime = now.setHours(now.getHours() + 1)
+            const nextOpeningTime = now.setHours(now.getHours() + 8)
+            resolve({
+                open: true,
+                nextClosingTime: new Date(nextClosingTime),
+                nextOpeningTime: new Date(nextOpeningTime),
+            })
+        })
+    }
 }

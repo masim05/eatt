@@ -20,4 +20,12 @@ describe("Broker", () => {
             expect(price).toEqual({sharePrice: 218})
         })
     })
+
+    describe("isMarketOpen", () => {
+        it("Should return {open: true}", async () => {
+            const isOpen = await broker.isMarketOpen();
+            expect(isOpen).toHaveProperty('open')
+            expect(isOpen.open).toEqual(true)
+        })
+    })
 })
