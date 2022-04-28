@@ -5,7 +5,6 @@ describe("Broker", () => {
     const broker = new Broker();
 
     describe("listTradableAssets", () => {
-
         it("Should return list of tickers", async () => {
             const tickers = await broker.listTradableAssets();
             expect(tickers).toBeInstanceOf(Array)
@@ -13,6 +12,12 @@ describe("Broker", () => {
                 expect(t).toHaveProperty('tickerSymbol')
             }
         })
+    })
 
+    describe("getLatestPrice", () => {
+        it("Should return the latest price for an asset", async () => {
+            const price = await broker.getLatestPrice('UEM');
+            expect(price).toEqual({sharePrice: 218})
+        })
     })
 })
