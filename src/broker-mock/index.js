@@ -62,4 +62,21 @@ module.exports = class Broker {
             resolve({success: true, sharePricePaid: 33})
         })
     }
+
+    /*
+    To view the shares that are available in the Firm's rewards account
+    Broker.getRewardsAccountPositions(): Promise<Array<{ tickerSymbol: string, quantity: number, sharePrice: number }>>
+     */
+
+    getRewardsAccountPositions() {
+        return new Promise((resolve) => {
+            resolve([
+                {tickerSymbol: 'UKR', quantity: 5, sharePrice: 3},
+                {tickerSymbol: 'UKW', quantity: 153, sharePrice: 3},
+                {tickerSymbol: 'ULE', quantity: 3200, sharePrice: 3},
+                {tickerSymbol: 'ULVR', quantity: 3578, sharePrice: 3},
+                {tickerSymbol: 'UOG', quantity: 2, sharePrice: 3},
+            ])
+        })
+    }
 }

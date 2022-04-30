@@ -37,4 +37,16 @@ describe("Broker", () => {
             expect(purchase).toHaveProperty('sharePricePaid')
         })
     })
+
+    describe("getRewardsAccountPositions", () => {
+        it("Should return list of positions", async () => {
+            const positions = await broker.getRewardsAccountPositions();
+            expect(positions).toBeInstanceOf(Array)
+            for (let p of positions) {
+                expect(p).toHaveProperty('tickerSymbol')
+                expect(p).toHaveProperty('quantity')
+                expect(p).toHaveProperty('sharePrice')
+            }
+        })
+    })
 })
