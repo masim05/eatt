@@ -28,4 +28,13 @@ describe("Broker", () => {
             expect(isOpen.open).toEqual(true)
         })
     })
+
+    describe("buySharesInRewardsAccount", () => {
+        it("Should return {success: true, sharePricePaid: X}", async () => {
+            const purchase = await broker.buySharesInRewardsAccount('UAV', 2);
+            expect(purchase).toHaveProperty('success')
+            expect(purchase.success).toEqual(true)
+            expect(purchase).toHaveProperty('sharePricePaid')
+        })
+    })
 })

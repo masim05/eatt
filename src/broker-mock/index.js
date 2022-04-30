@@ -56,4 +56,10 @@ module.exports = class Broker {
             })
         })
     }
+
+    buySharesInRewardsAccount(tickerSymbol, quantity) {
+        return new Promise((resolve) => {
+            resolve({success: true, sharePricePaid: 33})
+        })
+    }
 }
