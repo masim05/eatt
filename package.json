@@ -1,0 +1,22 @@
+{
+  "name": "eatt",
+  "version": "1.0.0",
+  "description": "## TODO:",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masim05/eatt.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/masim05/eatt/issues"
+  },
+  "homepage": "https://github.com/masim05/eatt#readme",
+  "devDependencies": {
+    "jest": "^28.0.2"
+  }
+}
