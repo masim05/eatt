@@ -94,4 +94,14 @@ module.exports = class Broker {
             ])
         })
     }
+
+    /*
+    To move shares from our Firm's rewards account to a user's own account
+    Broker.moveSharesFromRewardsAccount(toAccount: string, tickerSymbol: string, quantity: number): Promise<{ success: bool }>
+     */
+    moveSharesFromRewardsAccount(toAccount, tickerSymbol, quantity) {
+        return new Promise(resolve => {
+            resolve({success: true})
+        })
+    }
 }

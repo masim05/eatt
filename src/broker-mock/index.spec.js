@@ -49,4 +49,15 @@ describe("Broker", () => {
             }
         })
     })
+
+    describe("moveSharesFromRewardsAccount", () => {
+        it("Should return {success: true}", async () => {
+            const result = await broker.moveSharesFromRewardsAccount(
+                '44789E84-A906-41D9-B675-60501DC160FF',
+                'UOS',
+                1
+            );
+            expect(result).toEqual({success: true})
+        })
+    })
 })
