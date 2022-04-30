@@ -22,6 +22,10 @@ const SHARE_PRICES = {
 }
 
 module.exports = class Broker {
+    /*
+    To fetch a list of assets available for trading
+    Broker.listTradableAssets(): Promise<Array<{ tickerSymbol: string }>>
+     */
     listTradableAssets() {
         return new Promise((resolve) => {
             const value = Object.keys(SHARE_PRICES).map(t => {
@@ -29,10 +33,14 @@ module.exports = class Broker {
                     tickerSymbol: t
                 }
             })
-            resolve(value);
-        });
+            resolve(value)
+        })
     }
 
+    /*
+    To fetch the latest price for an asset
+    Broker.getLatestPrice(tickerSymbol: string): Promise<{ sharePrice: number }>
+     */
     getLatestPrice(tickerSymbol) {
         return new Promise((resolve, reject) => {
             const value = SHARE_PRICES[tickerSymbol]
@@ -44,6 +52,10 @@ module.exports = class Broker {
         })
     }
 
+    /*
+    To check if the stock market is currently open or closed
+    Broker.isMarketOpen(): Promise<{ open: bool, nextOpeningTime: string, nextClosingTime: string }>
+     */
     isMarketOpen() {
         return new Promise((resolve) => {
             const now = new Date();
@@ -57,6 +69,10 @@ module.exports = class Broker {
         })
     }
 
+    /*
+    To purchase a share in our Firm's rewards account.
+    Broker.buySharesInRewardsAccount(tickerSymbol: string, quantity: number): Promise<{ success: bool, sharePricePaid: number }>
+     */
     buySharesInRewardsAccount(tickerSymbol, quantity) {
         return new Promise((resolve) => {
             resolve({success: true, sharePricePaid: 33})
@@ -67,7 +83,6 @@ module.exports = class Broker {
     To view the shares that are available in the Firm's rewards account
     Broker.getRewardsAccountPositions(): Promise<Array<{ tickerSymbol: string, quantity: number, sharePrice: number }>>
      */
-
     getRewardsAccountPositions() {
         return new Promise((resolve) => {
             resolve([
