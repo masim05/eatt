@@ -21,7 +21,7 @@ const SHARE_PRICES = {
     USA: 202,
 }
 
-module.exports = class Broker {
+module.exports = class BrokerMock {
     /*
     To fetch a list of assets available for trading
     Broker.listTradableAssets(): Promise<Array<{ tickerSymbol: string }>>

@@ -1,6 +1,6 @@
 const Broker = require('./index')
 
-describe("Broker", () => {
+describe("BrokerMock", () => {
 
     const broker = new Broker();
 
@@ -22,10 +22,12 @@ describe("Broker", () => {
     })
 
     describe("isMarketOpen", () => {
-        it("Should return {open: true}", async () => {
+        it("Should return {open: true, nextOpeningTime: XXX, nextClosingTime: YYY}", async () => {
             const isOpen = await broker.isMarketOpen();
             expect(isOpen).toHaveProperty('open')
             expect(isOpen.open).toEqual(true)
+            expect(isOpen).toHaveProperty('nextClosingTime')
+            expect(isOpen).toHaveProperty('nextOpeningTime')
         })
     })
 
