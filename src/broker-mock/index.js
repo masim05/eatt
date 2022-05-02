@@ -85,11 +85,11 @@ module.exports = class BrokerMock {
     getRewardsAccountPositions() {
         return new Promise((resolve) => {
             resolve([
-                {tickerSymbol: 'UKR', quantity: 5, sharePrice: 3},
-                {tickerSymbol: 'UKW', quantity: 153, sharePrice: 3},
-                {tickerSymbol: 'ULE', quantity: 3200, sharePrice: 3},
-                {tickerSymbol: 'ULVR', quantity: 3578, sharePrice: 3},
-                {tickerSymbol: 'UOG', quantity: 2, sharePrice: 3},
+                {tickerSymbol: 'UKR', quantity: 3, sharePrice: 500},
+                {tickerSymbol: 'UKW', quantity: 3, sharePrice: 1530},
+                {tickerSymbol: 'ULE', quantity: 3, sharePrice: 3200},
+                {tickerSymbol: 'ULVR', quantity: 3, sharePrice: 3578},
+                {tickerSymbol: 'UOG', quantity: 3, sharePrice: 2000},
             ])
         })
     }
