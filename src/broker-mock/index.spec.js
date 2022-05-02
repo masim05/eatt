@@ -53,7 +53,13 @@ describe("BrokerMock", () => {
 
     describe("buySharesInRewardsAccount", () => {
         describe("Happy path", () => {
-            afterEach(() => fs.unlinkSync(STORAGE_PATH))
+            beforeEach(() => {
+                if (fs.existsSync(STORAGE_PATH)) fs.unlinkSync(STORAGE_PATH)
+            })
+
+            afterEach(() => {
+                if (fs.existsSync(STORAGE_PATH)) fs.unlinkSync(STORAGE_PATH)
+            })
 
             it("Should return {success: true, sharePricePaid: X}", async () => {
                 jest.useFakeTimers('modern')
@@ -89,13 +95,18 @@ describe("BrokerMock", () => {
     })
 
     describe("getRewardsAccountPositions", () => {
-        beforeEach(() => fs.writeFileSync(STORAGE_PATH, JSON.stringify([{
-            tickerSymbol: 'UKR',
-            quantity: 3,
-            sharePrice: 500
-        }])))
+        beforeEach(() => {
+            if (fs.existsSync(STORAGE_PATH)) fs.unlinkSync(STORAGE_PATH)
+            fs.writeFileSync(STORAGE_PATH, JSON.stringify([{
+                tickerSymbol: 'UKR',
+                quantity: 3,
+                sharePrice: 500
+            }]))
+        })
 
-        afterEach(() => fs.unlinkSync(STORAGE_PATH))
+        afterEach(() => {
+            if (fs.existsSync(STORAGE_PATH)) fs.unlinkSync(STORAGE_PATH)
+        })
 
         it("Should return list of positions", async () => {
             const positions = await broker.getRewardsAccountPositions()
