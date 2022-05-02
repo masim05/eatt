@@ -1,6 +1,6 @@
 const {
     computeAvailablePriceRanges, buyShare, buyShares
-} = require('./service')
+} = require('./distribution')
 
 describe('Distribution buyer', () => {
     describe('computeAvailablePriceRanges', () => {

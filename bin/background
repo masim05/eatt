@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const buyer = require('../src/distribution-buyer/service')
+const buyer = require('../src/buyer/distribution')
 
 const {MIN_SHARE_PRICE, MAX_SHARE_PRICE} = process.env
 const INTERVAL_20_SEC = 20 * 1000 // 20 sec
