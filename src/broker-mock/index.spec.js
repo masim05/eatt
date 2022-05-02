@@ -1,5 +1,7 @@
 const Broker = require('./index')
 
+const {SHARE_PRICES, STORAGE_PATH} = require('./constants')
+
 describe("BrokerMock", () => {
 
     const broker = new Broker();
