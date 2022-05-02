@@ -76,7 +76,7 @@ describe("BrokerMock", () => {
                 expect(positions).toEqual([{
                     tickerSymbol: 'UAV',
                     quantity: 2,
-                    sharePricePaid: SHARE_PRICES['UAV']
+                    sharePrice: SHARE_PRICES['UAV']
                 }])
             })
         })

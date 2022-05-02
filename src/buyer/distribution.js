@@ -88,7 +88,7 @@ maxSharesPerIteration: Control execution time of background job by limiting amou
 async function buyShares({minPrice, maxPrice, maxSharesBuffer, maxSharesPerIteration} = {}) {
     if (!minPrice) minPrice = 0
     if (!maxPrice) maxPrice = Infinity
-    if (!maxSharesBuffer) maxSharesBuffer = 50
+    if (!maxSharesBuffer) maxSharesBuffer = 10
     if (!maxSharesPerIteration) maxSharesPerIteration = 5
 
     try {
