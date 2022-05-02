@@ -1,25 +1,6 @@
-const SHARE_PRICES = {
-    UAV: 170,
-    UBG: 40,
-    UEM: 218,
-    UFO: 1,
-    UHS: 35,
-    UJO: 28,
-    UKCM: 92,
-    UKOG: 0,
-    UKR: 3,
-    UKW: 153,
-    ULE: 3200,
-    ULVR: 3578,
-    UOG: 2,
-    UOS: 550,
-    UPGS: 143,
-    UPL: 0,
-    UPR: 330,
-    URAH: 2,
-    URU: 400,
-    USA: 202,
-}
+const fs = require('fs')
+
+const {SHARE_PRICES, STORAGE_PATH} = require('./constants')
 
 module.exports = class BrokerMock {
     /*
@@ -47,7 +28,7 @@ module.exports = class BrokerMock {
             if (value) {
                 resolve({sharePrice: value})
             } else {
-                reject(new Error('No tickerSymbol found.'))
+                reject(new Error(`No tickerSymbol ${tickerSymbol} found.`))
             }
         })
     }
@@ -55,14 +36,26 @@ module.exports = class BrokerMock {
     /*
     To check if the stock market is currently open or closed
     Broker.isMarketOpen(): Promise<{ open: bool, nextOpeningTime: string, nextClosingTime: string }>
+    Simulate it works if `new Date(now).getSeconds() < 30` and doesn't work otherwise
      */
     isMarketOpen() {
         return new Promise((resolve) => {
-            const now = new Date();
-            const nextClosingTime = now.setHours(now.getHours() + 1)
-            const nextOpeningTime = now.setHours(now.getHours() + 8)
+            const now = new Date()
+            const thisMinute = new Date(now).setSeconds(0)
+            const nextMinute = new Date(thisMinute).setMinutes(new Date(thisMinute).getMinutes() + 1)
+            let nextClosingTime, nextOpeningTime, open
+            if (now.getSeconds() < 30) {
+                open = true
+                nextOpeningTime = nextMinute
+                nextClosingTime = (new Date(thisMinute)).setSeconds(30)
+            } else {
+                open = false
+                nextOpeningTime = nextMinute
+                nextClosingTime = (new Date(nextMinute)).setSeconds(30)
+            }
+
             resolve({
-                open: true,
+                open,
                 nextClosingTime: new Date(nextClosingTime),
                 nextOpeningTime: new Date(nextOpeningTime),
             })
@@ -74,8 +67,20 @@ module.exports = class BrokerMock {
     Broker.buySharesInRewardsAccount(tickerSymbol: string, quantity: number): Promise<{ success: bool, sharePricePaid: number }>
      */
     buySharesInRewardsAccount(tickerSymbol, quantity) {
-        return new Promise((resolve) => {
-            resolve({success: true, sharePricePaid: 33})
+        return new Promise(async (resolve, reject) => {
+            const isOpen = await this.isMarketOpen()
+            if (!isOpen.open) return reject(new Error('Market is closed.'))
+
+            if (!fs.existsSync(STORAGE_PATH)) {
+                fs.writeFileSync(STORAGE_PATH, `[]`)
+            }
+
+            const content = fs.readFileSync(STORAGE_PATH)
+            const positions = JSON.parse(content)
+            positions.push({tickerSymbol, quantity, sharePricePaid: SHARE_PRICES[tickerSymbol]})
+            fs.writeFileSync(STORAGE_PATH, JSON.stringify(positions))
+
+            resolve({success: true, sharePricePaid: SHARE_PRICES[tickerSymbol]})
         })
     }
 
@@ -85,13 +90,11 @@ module.exports = class BrokerMock {
      */
     getRewardsAccountPositions() {
         return new Promise((resolve) => {
-            resolve([
-                {tickerSymbol: 'UKR', quantity: 5, sharePrice: 3},
-                {tickerSymbol: 'UKW', quantity: 153, sharePrice: 3},
-                {tickerSymbol: 'ULE', quantity: 3200, sharePrice: 3},
-                {tickerSymbol: 'ULVR', quantity: 3578, sharePrice: 3},
-                {tickerSymbol: 'UOG', quantity: 2, sharePrice: 3},
-            ])
+            if (!fs.existsSync(STORAGE_PATH)) {
+                fs.writeFileSync(STORAGE_PATH, '[]')
+            }
+            const content = fs.readFileSync(STORAGE_PATH)
+            resolve(JSON.parse(content))
         })
     }
 
