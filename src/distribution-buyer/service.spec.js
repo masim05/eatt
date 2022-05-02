@@ -1,5 +1,5 @@
 const {
-    computeAvailablePriceRanges, buyShare
+    computeAvailablePriceRanges, buyShare, buyShares
 } = require('./service')
 
 describe('Distribution buyer', () => {
@@ -48,12 +48,30 @@ describe('Distribution buyer', () => {
     })
 
     describe('buyShare', () => {
-        it('Should return {success: true, sharePricePaid: AAA, tickerSymbol: \'BBB\'}', async () => {
-            const result = await buyShare();
-            expect(result).toHaveProperty('success')
-            expect(result.success).toEqual(true)
-            expect(result).toHaveProperty('tickerSymbol')
-            expect(result).toHaveProperty('sharePricePaid')
+        describe('Happy path', () => {
+            it('Should return {success: true, sharePricePaid: AAA, tickerSymbol: \'BBB\'}', async () => {
+                const result = await buyShare();
+                expect(result).toHaveProperty('success')
+                expect(result.success).toEqual(true)
+                expect(result).toHaveProperty('tickerSymbol')
+                expect(result).toHaveProperty('sharePricePaid')
+            })
+        })
+    })
+
+    describe('buyShares', () => {
+        describe('Happy path', () => {
+            it('Should return array of positions', async () => {
+                const positions = await buyShares();
+                expect(positions).toBeInstanceOf(Array)
+                for (let p of positions) {
+                    expect(p).toHaveProperty('tickerSymbol')
+                    expect(p).toHaveProperty('sharePricePaid')
+                    expect(p).toHaveProperty('success')
+                    expect(p.success).toEqual(true)
+                }
+
+            })
         })
     })
 })
