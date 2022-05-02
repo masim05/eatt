@@ -9,7 +9,7 @@
 ### To run:
 
 ```bash
-git clone git@github.com:masim05/eatt.git
+git clone https://github.com/masim05/eatt.git
 cd eatt
 npm i
 # run tests
