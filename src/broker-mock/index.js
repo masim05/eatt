@@ -77,7 +77,7 @@ module.exports = class BrokerMock {
 
             const content = fs.readFileSync(STORAGE_PATH)
             const positions = JSON.parse(content)
-            positions.push({tickerSymbol, quantity, sharePricePaid: SHARE_PRICES[tickerSymbol]})
+            positions.push({tickerSymbol, quantity, sharePrice: SHARE_PRICES[tickerSymbol]})
             fs.writeFileSync(STORAGE_PATH, JSON.stringify(positions))
 
             resolve({success: true, sharePricePaid: SHARE_PRICES[tickerSymbol]})
