@@ -22,10 +22,26 @@ describe("BrokerMock", () => {
     })
 
     describe("isMarketOpen", () => {
-        it("Should return {open: true, nextOpeningTime: XXX, nextClosingTime: YYY}", async () => {
-            const isOpen = await broker.isMarketOpen();
+        it("Should return {open: true,...} if seconds < 30", async () => {
+            jest.useFakeTimers('modern')
+            // Mock `new Date()` with '2022-05-02 18:30:10'
+            jest.setSystemTime(new Date(2022, 5, 2, 18, 30, 10))
+            const isOpen = await broker.isMarketOpen()
+            jest.useRealTimers()
             expect(isOpen).toHaveProperty('open')
             expect(isOpen.open).toEqual(true)
+            expect(isOpen).toHaveProperty('nextClosingTime')
+            expect(isOpen).toHaveProperty('nextOpeningTime')
+        })
+
+        it("Should return {open: false,...} if seconds >= 30", async () => {
+            jest.useFakeTimers('modern')
+            // Mock `new Date()` with '2022-05-02 18:30:30'
+            jest.setSystemTime(new Date(2022, 5, 2, 18, 30, 30))
+            const isOpen = await broker.isMarketOpen()
+            jest.useRealTimers()
+            expect(isOpen).toHaveProperty('open')
+            expect(isOpen.open).toEqual(false)
             expect(isOpen).toHaveProperty('nextClosingTime')
             expect(isOpen).toHaveProperty('nextOpeningTime')
         })

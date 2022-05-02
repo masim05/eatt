@@ -53,14 +53,26 @@ module.exports = class BrokerMock {
     /*
     To check if the stock market is currently open or closed
     Broker.isMarketOpen(): Promise<{ open: bool, nextOpeningTime: string, nextClosingTime: string }>
+    Simulate it works if `new Date(now).getSeconds() < 30` and doesn't work otherwise
      */
     isMarketOpen() {
         return new Promise((resolve) => {
-            const now = new Date();
-            const nextClosingTime = now.setHours(now.getHours() + 1)
-            const nextOpeningTime = now.setHours(now.getHours() + 8)
+            const now = new Date()
+            const thisMinute = new Date(now).setSeconds(0)
+            const nextMinute = new Date(thisMinute).setMinutes(new Date(thisMinute).getMinutes() + 1)
+            let nextClosingTime, nextOpeningTime, open
+            if (now.getSeconds() < 30) {
+                open = true
+                nextOpeningTime = nextMinute
+                nextClosingTime = (new Date(thisMinute)).setSeconds(30)
+            } else {
+                open = false
+                nextOpeningTime = nextMinute
+                nextClosingTime = (new Date(nextMinute)).setSeconds(30)
+            }
+
             resolve({
-                open: true,
+                open,
                 nextClosingTime: new Date(nextClosingTime),
                 nextOpeningTime: new Date(nextOpeningTime),
             })
