@@ -50,7 +50,12 @@ describe('Distribution buyer', () => {
     describe('buyShare', () => {
         describe('Happy path', () => {
             it('Should return {success: true, sharePricePaid: AAA, tickerSymbol: \'BBB\'}', async () => {
+                jest.useFakeTimers('modern')
+                // Mock `new Date()` with '2022-05-02 18:30:10' - market is open
+                jest.setSystemTime(new Date(2022, 5, 2, 18, 30, 10))
                 const result = await buyShare();
+                jest.useRealTimers()
+
                 expect(result).toHaveProperty('success')
                 expect(result.success).toEqual(true)
                 expect(result).toHaveProperty('tickerSymbol')
@@ -62,7 +67,12 @@ describe('Distribution buyer', () => {
     describe('buyShares', () => {
         describe('Happy path', () => {
             it('Should return array of positions', async () => {
+                jest.useFakeTimers('modern')
+                // Mock `new Date()` with '2022-05-02 18:30:10' - market is open
+                jest.setSystemTime(new Date(2022, 5, 2, 18, 30, 10))
                 const positions = await buyShares();
+                jest.useRealTimers()
+
                 expect(positions).toBeInstanceOf(Array)
                 for (let p of positions) {
                     expect(p).toHaveProperty('tickerSymbol')

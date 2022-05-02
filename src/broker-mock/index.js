@@ -1,23 +1,22 @@
 const SHARE_PRICES = {
-    UAV: 170,
-    UBG: 40,
-    UEM: 218,
-    UFO: 1,
-    UHS: 35,
-    UJO: 28,
-    UKCM: 92,
-    UKR: 3,
-    UKW: 153,
-    ULE: 3200,
-    ULVR: 3578,
-    UOG: 2,
+    UAV: 1700,
+    UBG: 4000,
+    UEM: 21800,
+    UFO: 400,
+    UHS: 3500,
+    UJO: 2800,
+    UKCM: 9200,
+    UKR: 300,
+    UKW: 1530,
+    ULE: 320000,
+    ULVR: 357800,
+    UOG: 200,
     UOS: 550,
-    UPGS: 143,
-    UPL: 0,
-    UPR: 330,
-    URAH: 2,
-    URU: 400,
-    USA: 202,
+    UPGS: 14300,
+    UPR: 33000,
+    URAH: 200,
+    URU: 40000,
+    USA: 20200,
 }
 
 module.exports = class BrokerMock {
@@ -73,7 +72,10 @@ module.exports = class BrokerMock {
     Broker.buySharesInRewardsAccount(tickerSymbol: string, quantity: number): Promise<{ success: bool, sharePricePaid: number }>
      */
     buySharesInRewardsAccount(tickerSymbol, quantity) {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve, reject) => {
+            const isOpen = await this.isMarketOpen()
+            if (!isOpen.open) return reject(new Error('Market is closed.'))
+
             resolve({success: true, sharePricePaid: SHARE_PRICES[tickerSymbol]})
         })
     }
