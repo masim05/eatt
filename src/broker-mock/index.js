@@ -6,7 +6,6 @@ const SHARE_PRICES = {
     UHS: 35,
     UJO: 28,
     UKCM: 92,
-    UKOG: 0,
     UKR: 3,
     UKW: 153,
     ULE: 3200,
@@ -47,7 +46,7 @@ module.exports = class BrokerMock {
             if (value) {
                 resolve({sharePrice: value})
             } else {
-                reject(new Error('No tickerSymbol found.'))
+                reject(new Error(`No tickerSymbol ${tickerSymbol} found.`))
             }
         })
     }
@@ -75,7 +74,7 @@ module.exports = class BrokerMock {
      */
     buySharesInRewardsAccount(tickerSymbol, quantity) {
         return new Promise((resolve) => {
-            resolve({success: true, sharePricePaid: 33})
+            resolve({success: true, sharePricePaid: SHARE_PRICES[tickerSymbol]})
         })
     }
 
