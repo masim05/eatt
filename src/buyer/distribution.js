@@ -101,7 +101,7 @@ async function buyShares({minPrice, maxPrice, maxSharesBuffer, maxSharesPerItera
             const result = await buyShare({minPrice, maxPrice})
             if (result.success) acquired.push(result)
         }
-        logger.info(acquired, `Acquired ${acquired.length} shares.`)
+        logger.info(`Acquired ${acquired.length} shares: ${[...new Set(acquired.map(a => a.tickerSymbol))]}`)
         return Promise.resolve(acquired)
     } catch (error) {
         logger.error(error)
