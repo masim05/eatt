@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test jest",
     "start": "node bin/www",
-    "bg": "node bin/background"
+    "bg": "node bin/background",
+    "cleanup": "rm storage.json || echo 'Nothing to clean.'"
   },
   "repository": {
     "type": "git",
