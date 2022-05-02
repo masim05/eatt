@@ -105,7 +105,6 @@ async function buyShares({minPrice, maxPrice, maxSharesBuffer, maxSharesPerItera
         return Promise.resolve(acquired)
     } catch (error) {
         logger.error(error)
-        return Promise.reject(error)
     }
 }
 
