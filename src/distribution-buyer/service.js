@@ -1,6 +1,7 @@
 const logger = require('pino')()
 
 const Broker = require('../broker-mock')
+
 /*
 A service which buys shares. Algorithm forces that 95% of distributed rewards to have a value between £3-£10,
 3% between £10-£25 and 2% between £25-£200.
@@ -12,14 +13,11 @@ Range 2 stands for £25-£200
 Note: prices are in penny sterlings.
  */
 
-// Control the budget by limiting amount of shares in reward account
-const MAX_SHARES_BUFFER = 10
-
 class AcquireFailedError extends Error {
 }
 
 /*
-Buy one share keeping correct distribution
+Buy one share keeping correct distribution.
  */
 async function buyShare({minPrice, maxPrice} = {}) {
     if (!minPrice) minPrice = 0
@@ -83,6 +81,35 @@ async function buyShare({minPrice, maxPrice} = {}) {
 }
 
 /*
+Buy several shares keeping correct distribution.
+maxSharesBuffer: Control the budget by limiting amount of shares in reward account.
+maxSharesPerIteration: Control execution time of background job by limiting amount of shares to buy.
+ */
+async function buyShares({minPrice, maxPrice, maxSharesBuffer, maxSharesPerIteration} = {}) {
+    if (!minPrice) minPrice = 0
+    if (!maxPrice) maxPrice = Infinity
+    if (!maxSharesBuffer) maxSharesBuffer = 50
+    if (!maxSharesPerIteration) maxSharesPerIteration = 5
+
+    try {
+        const broker = new Broker()
+        const positions = await broker.getRewardsAccountPositions()
+        const sharesTotal = positions.map(p => p.quantity).reduce((total, q) => total + q)
+        const sharesToBuyNow = Math.min(maxSharesBuffer - sharesTotal, maxSharesPerIteration)
+        let acquired = [];
+        for (let i = 0; i < sharesToBuyNow; i++) {
+            const result = await buyShare({minPrice, maxPrice})
+            if (result.success) acquired.push(result)
+        }
+        logger.info(acquired, `Acquired ${acquired.length} shares.`)
+        return Promise.resolve(acquired)
+    } catch (error) {
+        logger.error(error)
+        return Promise.reject(error)
+    }
+}
+
+/*
 computeAvailablePriceRange(positions): Array<bool>
 Each element of the array represents if next share to buy can have the corresponding price range in order to keep
 proper distribution.
@@ -108,4 +135,4 @@ function computeAvailablePriceRanges(positions) {
     return result
 }
 
-module.exports = {buyShare, computeAvailablePriceRanges}
+module.exports = {buyShare, computeAvailablePriceRanges, buyShares}
