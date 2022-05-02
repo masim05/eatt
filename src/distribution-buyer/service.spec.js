@@ -1,5 +1,5 @@
 const {
-    computeAvailablePriceRanges,
+    computeAvailablePriceRanges, buyShare
 } = require('./service')
 
 describe('Distribution buyer', () => {
@@ -44,6 +44,16 @@ describe('Distribution buyer', () => {
                 {tickerSymbol: 'SCO', quantity: 1, sharePrice: 1200},
                 {tickerSymbol: 'BPT', quantity: 1, sharePrice: 3000},
             ])).toEqual([true, false, false])
+        })
+    })
+
+    describe('buyShare', () => {
+        it('Should return {success: true, sharePricePaid: AAA, tickerSymbol: \'BBB\'}', async () => {
+            const result = await buyShare();
+            expect(result).toHaveProperty('success')
+            expect(result.success).toEqual(true)
+            expect(result).toHaveProperty('tickerSymbol')
+            expect(result).toHaveProperty('sharePricePaid')
         })
     })
 })
