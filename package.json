@@ -18,6 +18,7 @@
   "homepage": "https://github.com/masim05/eatt#readme",
   "devDependencies": {
     "jest": "^28.0.2",
+    "pino-pretty": "^7.6.1",
     "supertest": "^6.2.3"
   },
   "dependencies": {
