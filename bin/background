@@ -2,11 +2,8 @@
 
 const buyer = require('../src/buyer/distribution')
 
-const {MIN_SHARE_PRICE, MAX_SHARE_PRICE} = process.env
+const {MIN_SHARE_PRICE, MAX_SHARE_PRICE, MAX_SHARES_BUFFER, MAX_SHARES_PER_ITERATION, INTERVAL} = process.env
 const INTERVAL_20_SEC = 20 * 1000 // 20 sec
-
-const MAX_SHARES_BUFFER = 100
-const MAX_SHARES_PER_ITERATION = 10
 
 const run = () => {
     buyer.buyShares({
@@ -15,7 +12,7 @@ const run = () => {
         maxSharesBuffer: MAX_SHARES_BUFFER,
         maxSharesPerIteration: MAX_SHARES_PER_ITERATION,
     })
-        .then(() => setTimeout(run, INTERVAL_20_SEC))
+        .then(() => setTimeout(run, INTERVAL || INTERVAL_20_SEC))
         .catch(console.error) // should never happen
 }
 
