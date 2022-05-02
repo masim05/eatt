@@ -1,14 +1,88 @@
+const logger = require('pino')()
+
 const Broker = require('../broker-mock')
 /*
 A service which buys shares. Algorithm forces that 95% of distributed rewards to have a value between £3-£10,
 3% between £10-£25 and 2% between £25-£200.
- */
 
-/*
 Range 0 stands for £3-£10
 Range 1 stands for £10-£25
 Range 2 stands for £25-£200
 
+Note: prices are in penny sterlings.
+ */
+
+// Control the budget by limiting amount of shares in reward account
+const MAX_SHARES_BUFFER = 10
+
+class AcquireFailedError extends Error {
+}
+
+/*
+Buy one share keeping correct distribution
+ */
+async function buyShare({minPrice, maxPrice} = {}) {
+    if (!minPrice) minPrice = 0
+    if (!maxPrice) maxPrice = Infinity
+
+    try {
+        const broker = new Broker()
+
+        const isOpen = await broker.isMarketOpen()
+        if (!isOpen.open) {
+            return Promise.reject(isOpen)
+        }
+
+        const assets = await broker.listTradableAssets()
+
+        const positions = await broker.getRewardsAccountPositions()
+        const availableRanges = computeAvailablePriceRanges(positions)
+        for (let i = 0; i < assets.length; i++) {
+            const p = await broker.getLatestPrice(assets[i].tickerSymbol)
+
+            if (p.sharePrice < minPrice) continue
+            if (p.sharePrice < 300) continue
+            if (p.sharePrice > maxPrice) continue
+            if (p.sharePrice > 20000) continue
+
+            let res;
+            if (availableRanges[2]) {
+                // Wait for an expensive share to come
+                if (p.sharePrice >= 2500) {
+                    res = await broker.buySharesInRewardsAccount(assets[i].tickerSymbol, 1)
+                } else {
+                    continue
+                }
+            } else if (availableRanges[1]) {
+                // Wait for a medium price share to come
+                if (p.sharePrice >= 1000 && p.sharePrice < 2500) {
+                    res = await broker.buySharesInRewardsAccount(assets[i].tickerSymbol, 1)
+                } else {
+                    continue
+                }
+            } else if (p.sharePrice < 1000) {
+                // Wait for a cheap price share to come
+                res = await broker.buySharesInRewardsAccount(assets[i].tickerSymbol, 1)
+            } else {
+                // Jump to the next loop
+                continue
+            }
+            if (!res.success) {
+                const err = new AcquireFailedError()
+                logger.error(err)
+                return Promise.reject(err)
+            }
+
+            logger.info(res, `${assets[i].tickerSymbol} was acquired.`)
+            return Promise.resolve({...res, tickerSymbol: assets[i].tickerSymbol})
+        }
+    } catch (error) {
+        logger.error(error)
+        return Promise.reject(error)
+    }
+}
+
+/*
 computeAvailablePriceRange(positions): Array<bool>
 Each element of the array represents if next share to buy can have the corresponding price range in order to keep
 proper distribution.
@@ -34,4 +108,4 @@ function computeAvailablePriceRanges(positions) {
     return result
 }
 
-module.exports = {computeAvailablePriceRanges}
+module.exports = {buyShare, computeAvailablePriceRanges}
