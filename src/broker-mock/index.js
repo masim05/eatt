@@ -71,6 +71,15 @@ module.exports = class BrokerMock {
             const isOpen = await this.isMarketOpen()
             if (!isOpen.open) return reject(new Error('Market is closed.'))
 
+            if (!fs.existsSync(STORAGE_PATH)) {
+                fs.writeFileSync(STORAGE_PATH, `[]`)
+            }
+
+            const content = fs.readFileSync(STORAGE_PATH)
+            const positions = JSON.parse(content)
+            positions.push({tickerSymbol, quantity, sharePricePaid: SHARE_PRICES[tickerSymbol]})
+            fs.writeFileSync(STORAGE_PATH, JSON.stringify(positions))
+
             resolve({success: true, sharePricePaid: SHARE_PRICES[tickerSymbol]})
         })
     }
@@ -81,13 +90,11 @@ module.exports = class BrokerMock {
      */
     getRewardsAccountPositions() {
         return new Promise((resolve) => {
-            resolve([
-                {tickerSymbol: 'UKR', quantity: 3, sharePrice: 500},
-                {tickerSymbol: 'UKW', quantity: 3, sharePrice: 1530},
-                {tickerSymbol: 'ULE', quantity: 3, sharePrice: 3200},
-                {tickerSymbol: 'ULVR', quantity: 3, sharePrice: 3578},
-                {tickerSymbol: 'UOG', quantity: 3, sharePrice: 2000},
-            ])
+            if (!fs.existsSync(STORAGE_PATH)) {
+                fs.writeFileSync(STORAGE_PATH, '[]')
+            }
+            const content = fs.readFileSync(STORAGE_PATH)
+            resolve(JSON.parse(content))
         })
     }
 
