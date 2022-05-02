@@ -1,3 +1,5 @@
+const path = require('path')
+
 const SHARE_PRICES = {
     UAV: 1700,
     UBG: 4000,
@@ -18,7 +20,9 @@ const SHARE_PRICES = {
     URU: 40000,
     USA: 20200,
 }
-const STORAGE_PATH = (process.env.NODE_ENV === 'test') ? './storage.test.json' : './storage.json'
+const STORAGE_PATH = (process.env.NODE_ENV === 'test') ?
+    path.resolve('./storage.test.json') :
+    path.resolve('./storage.json')
 
 module.exports = {
     SHARE_PRICES, STORAGE_PATH
