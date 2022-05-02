@@ -94,7 +94,7 @@ async function buyShares({minPrice, maxPrice, maxSharesBuffer, maxSharesPerItera
     try {
         const broker = new Broker()
         const positions = await broker.getRewardsAccountPositions()
-        const sharesTotal = positions.map(p => p.quantity).reduce((total, q) => total + q)
+        const sharesTotal = positions.length ? positions.map(p => p.quantity).reduce((total, q) => total + q) : 0
         const sharesToBuyNow = Math.min(maxSharesBuffer - sharesTotal, maxSharesPerIteration)
         let acquired = [];
         for (let i = 0; i < sharesToBuyNow; i++) {
